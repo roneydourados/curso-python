@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from src.models.postgres.settings.base import Base
+from ..settings.base import Base
 
 class PetsTable(Base):
     __tablename__ = "pets"

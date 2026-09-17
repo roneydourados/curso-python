@@ -98,10 +98,23 @@ wheels = [
 ]
 
 [[package]]
+name = "mock-alchemy"
+version = "0.2.6"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "sqlalchemy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a7/80/5af6036ed9a97d927c36384b63ea2f270224726cda7f1402cb62781d7054/mock_alchemy-0.2.6.tar.gz", hash = "sha256:807cc2bd7f658fb98292900052eaa6eeb4a65b2d62364e639462480a275299ef", size = 17361, upload-time = "2023-03-26T21:39:31.339Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/aa/93/8d1f7ee9fa858d1c13511de6e0bedf7f57d15e9c7aab0e9fdf4d66074417/mock_alchemy-0.2.6-py3-none-any.whl", hash = "sha256:d5e17f2c92d0299d70cd9a0d3c8f96f759a81c285c76b03f4192451583bf865f", size = 16410, upload-time = "2023-03-26T21:39:29.486Z" },
+]
+
+[[package]]
 name = "mvc"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "mock-alchemy" },
     { name = "psycopg2-binary" },
     { name = "pytest" },
     { name = "sqlalchemy" },
@@ -109,6 +122,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "mock-alchemy", specifier = ">=0.2.6" },
     { name = "psycopg2-binary", specifier = ">=2.9.13" },
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "sqlalchemy", specifier = ">=2.0.54" },
