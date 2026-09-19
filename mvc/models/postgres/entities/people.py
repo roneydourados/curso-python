@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
-from src.models.postgres.settings.base import Base
+from ..settings.base import Base
 
 
 class PeopleTable(Base):
