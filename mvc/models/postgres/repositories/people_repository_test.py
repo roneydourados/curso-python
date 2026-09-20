@@ -4,6 +4,7 @@ from unittest import mock
 from mock_alchemy.mocking import UnifiedAlchemyMagicMock
 
 from ..entities.people import PeopleTable
+from ..entities.pets import PetsTable
 from .people_repository import PeopleRepository
 
 from sqlalchemy.orm.exc import NoResultFound
@@ -31,7 +32,29 @@ class MockConnectionHandler:
                             pet_id=2,
                         ),
                     ],
-                )
+                ),
+                (
+                    [
+                        mock.call.query(PeopleTable),
+                        mock.call.join(PetsTable, PetsTable.id == PeopleTable.pet_id),
+                        mock.call.filter(PeopleTable.id == 1),
+                        mock.call.with_entities(
+                            PeopleTable.first_name,
+                            PeopleTable.last_name,
+                            PetsTable.name.label("pet_name"),
+                            PetsTable.type.label("pet_type"),
+                        ),
+                    ],
+                    [
+                        PeopleTable(
+                            id=1,
+                            first_name="john",
+                            last_name="doe",
+                            age=30,
+                            pet_id=1,
+                        ),
+                    ],
+                ),
             ]
         )
 
@@ -68,6 +91,37 @@ def test_get_all_people():
     assert response[1].first_name == "jane"
 
     print(response)
+
+
+def test_get_person():
+    mock_connection = MockConnectionHandler()
+    repo = PeopleRepository(mock_connection)
+
+    response = repo.get_person(1)
+
+    mock_connection.session.query.assert_called_once_with(PeopleTable)
+    mock_connection.session.join.assert_called_once_with(
+        PetsTable, PetsTable.id == PeopleTable.pet_id
+    )
+    mock_connection.session.filter.assert_called_once_with(PeopleTable.id == 1)
+    mock_connection.session.with_entities.assert_called_once_with(
+        PeopleTable.first_name,
+        PeopleTable.last_name,
+        PetsTable.name.label("pet_name"),
+        PetsTable.type.label("pet_type"),
+    )
+
+    assert response is not None
+
+
+def test_get_person_not_result():
+    mock_connection = MockConnectionHandlerNoResult()
+    repo = PeopleRepository(mock_connection)
+
+    response = repo.get_person(999)
+
+    mock_connection.session.query.assert_called_once_with(PeopleTable)
+    assert response is None
 
 
 def test_create_person():

@@ -3,6 +3,7 @@ from typing import List
 from sqlalchemy.orm.exc import NoResultFound
 
 from ..entities.people import PeopleTable
+from ..entities.pets import PetsTable
 
 
 class PeopleRepository:
@@ -16,6 +17,24 @@ class PeopleRepository:
                 return people
             except NoResultFound:
                 return []
+
+    def get_person(self, person_id: int) -> PeopleTable:
+        with self.db_connection_handler as db:
+            try:
+                person = (
+                    db.session.query(PeopleTable)
+                    .join(PetsTable, PetsTable.id == PeopleTable.pet_id)
+                    .filter(PeopleTable.id == person_id)
+                    .with_entities(
+                       PeopleTable.first_name,
+                       PeopleTable.last_name,
+                       PetsTable.name.label("pet_name"),
+                       PetsTable.type.label("pet_type"),
+                    )
+                )
+                return person
+            except NoResultFound:
+                return None
 
     def create_person(
         self, first_name: str, last_name: str, age: int, pet_id: int
