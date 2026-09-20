@@ -3,11 +3,10 @@ from typing import List
 from sqlalchemy.orm.exc import NoResultFound
 
 from ..entities.pets import PetsTable
-from ..settings.connection import DBConnectiionHandler
 
 
 class PetsRepository:
-    def __init__(self, db_connection_handler: DBConnectiionHandler):
+    def __init__(self, db_connection_handler):
         self.db_connection_handler = db_connection_handler
 
     def get_all_pets(self) -> List:
