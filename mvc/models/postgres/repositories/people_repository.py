@@ -4,9 +4,10 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from ..entities.people import PeopleTable
 from ..entities.pets import PetsTable
+from ..interfaces.people_repository_interface import PeopleRepositoryInterface
 
 
-class PeopleRepository:
+class PeopleRepository(PeopleRepositoryInterface):
     def __init__(self, db_connection_handler):
         self.db_connection_handler = db_connection_handler
 
